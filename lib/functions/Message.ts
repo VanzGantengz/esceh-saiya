@@ -9,7 +9,7 @@ export class convertMessage {
     msg.from = msg.key.remoteJid;
     msg.isGroup = msg.from.endsWith('@g.us');
     msg.sender = msg.isGroup ? msg.key.participant : msg.from
-    msg.isOwner = msg.sender == '6282135250846@s.whatsapp.net';
+    msg.isOwner = msg.sender === '6282135250846@s.whatsapp.net' || msg.sender === '628564020165@s.whatsapp.net';
     msg.body = msg.message?.conversation || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || msg.message.extendedTextMessage?.text || '';
     msg.args = msg.body.trim().split(/ +/).slice(1)
     let [noPrefix, command] = msg.body.trim().split(/ +/)
