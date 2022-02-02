@@ -2,6 +2,7 @@
   "dependencies": {
     "@adiwajshing/baileys": "github:adiwajshing/baileys#multi-device",
     "axios": "^0.25.0",
+    "mongodb": "latest",
     "pino": "^7.6.4"
   },
   "name": "baru",
