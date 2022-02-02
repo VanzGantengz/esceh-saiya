@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@adiwajshing/baileys": "github:adiwajshing/baileys#multi-device",
+    "axios": "^0.25.0",
+    "pino": "^7.6.4"
+  },
+  "name": "baru",
+  "version": "1.0.0",
+  "description": "asu ",
+  "main": "primbon_nohoki_by_lort_restu.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "ts-node index.ts"
+  },
+  "keywords": [
+    "asu"
+  ],
+  "author": "SanZ",
+  "license": "MIT"
+}
