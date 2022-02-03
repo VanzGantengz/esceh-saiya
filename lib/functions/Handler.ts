@@ -37,12 +37,12 @@ export default class Handler extends Clients {
       } else if (msg.noPrefix == '$'){
         if (!msg.isOwner) return;
         exec(q, function(err, stdout){
-          if (err) this.client.sendMessage(msg.from, {
+          if (err) return this.client.sendMessage(msg.from, {
             text: (format(err)).replace(Config.MONGGO_URI, 'uri gw anjg')
           }, {
             quoted: msg
           })
-          if (stdout) this.client.sendMessage(msg.from, {
+          if (stdout) return this.client.sendMessage(msg.from, {
             text: (format(stdout)).replace(Config.MONGGO_URI, 'uri gw anjg')
           }, {
             quoted: msg
