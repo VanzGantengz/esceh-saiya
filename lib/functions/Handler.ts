@@ -18,6 +18,7 @@ export default class Handler extends Clients {
       let m = new convertMessage(this.msg, this.client)
       let msg = m.msg.messages[0];
       let q = msg.args.join(' ')
+      let conn = this.client
       if (msg.noPrefix == '>'){
         try {
           if (!msg.isOwner) return;
@@ -36,13 +37,13 @@ export default class Handler extends Clients {
         }
       } else if (msg.noPrefix == '$'){
         if (!msg.isOwner) return;
-        exec(q, function(err, stdout){
-          if (err) return this.client.sendMessage(msg.from, {
+        exec(q, function(err, stdout) {
+          if (err) return conn.sendMessage(msg.from, {
             text: (format(err)).replace(Config.MONGGO_URI, 'uri gw anjg')
           }, {
             quoted: msg
           })
-          if (stdout) return this.client.sendMessage(msg.from, {
+          if (stdout) return conn.sendMessage(msg.from, {
             text: (format(stdout)).replace(Config.MONGGO_URI, 'uri gw anjg')
           }, {
             quoted: msg
