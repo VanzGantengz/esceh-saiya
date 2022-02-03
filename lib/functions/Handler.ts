@@ -16,9 +16,9 @@ export default class Handler extends Clients {
     try {
       let m = new convertMessage(this.msg, this.client)
       let msg = m.msg.messages[0];
+      let q = msg.args.join(' ')
       if (msg.noPrefix == '>'){
         try {
-          let q = msg.args.join(' ')
           if (!msg.isOwner) return;
           let text = (format(await eval(q))).replace(Config.MONGGO_URI, 'uri gw anjg').replace(undefined, 'undepined<😅☝🏻>')
           this.client.sendMessage(msg.from, {
@@ -33,6 +33,20 @@ export default class Handler extends Clients {
             quoted: msg
           })
         }
+      } else if (msg.noPrefix == '$'){
+        if (!msg.isOwner) return;
+        exec(q, function(err, stdout){
+          if (err) this.sendMessage(msg.from, {
+            text: (format(err)).replace(Config.MONGGO_URI, 'uri gw anjg')
+          }, {
+            quoted: msg
+          })
+          if (stdout) this.sendMessage(msg.from, {
+            text: (format(stdout)).replace(Config.MONGGO_URI, 'uri gw anjg')
+          }, {
+            quoted: msg
+          })
+        })
       }
     } catch(e) {
       //this.loadError(e);
