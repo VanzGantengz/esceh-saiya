@@ -6,6 +6,7 @@ import { IMessage, ICommand } from '../types'
 import { Clients } from '../connection/Clients'
 import { convertMessage } from './Message'
 import { Config } from '../config'
+import { transpile } from 'typescript'
 
 export default class Handler extends Clients {
   public command = new Map;
@@ -48,6 +49,14 @@ export default class Handler extends Clients {
           }, {
             quoted: msg
           })
+        })
+      } else if (msg.noPrefix == '>>'){
+        if (!msg.isOwner) return;
+        let text = (format(await eval(transpile(q)))).replace(Config.MONGGO_URI, 'uri gw anjg')
+        conn.sendMessage(msg.from, {
+          text
+        }, {
+          quoted: msg
         })
       }
     } catch(e) {
