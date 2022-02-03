@@ -1,4 +1,5 @@
 import { WASocket } from '@adiwajshing/baileys'
+import { exec } from 'child_process'
 import { readdirSync } from 'fs'
 import { format } from 'util'
 import { IMessage, ICommand } from '../types'
