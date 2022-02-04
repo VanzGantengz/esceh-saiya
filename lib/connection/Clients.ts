@@ -83,15 +83,16 @@ export class Clients extends EventEmitter {
             type: FileType(buff),
             result: buff,
             error: null
-          } else {
-            return {
-              type: null,
-              result: null,
-              error: err
-            }
+          }
+        } else {
+          return {
+            type: null,
+            result: null,
+            error: err
           }
         }
-      })
+      }
+    })
   }
     
   public loadError(error: Error | string){
