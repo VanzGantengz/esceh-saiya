@@ -91,11 +91,10 @@ export class Clients extends EventEmitter {
             error: err
           }
         }
-      }
-    })
+      })
   }
-    
-  public loadError(error: Error | string){
-    this.emit('Error', String(error))
+  
+  public loadError(err: Error | string){
+    this.emit('Error', String(err))
   }
 }
