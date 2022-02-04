@@ -18,6 +18,7 @@ export class Clients extends EventEmitter {
   private messages;
   constructor(public client: WASocket, private message: any){
     super()
+    this.data = new Array
     this.messages = message.messages[0]
     this._loadEvents()
   }
@@ -35,17 +36,17 @@ export class Clients extends EventEmitter {
       this.emit('CLI:groups', groups)
     })
     this.client.ev.on('group-participants.update', participants => {
-      let pp = []
+      let profile = new Array
       participants.participants.forEach(async(p) => {
-        let getPp = await this.client.profilePictureUrl(p).catch(_ => undefined)
-        pp.push({
+        let getPp = this.client.profilePictureUrl(p).then(res => res).catch(_ => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6OKCP6J9kSv2vlCoxRWiJWWze3agzcNnxNA&usqp=CAU')
+        profile.push({
           participants: p,
-          pp: getPp
+          picture: getPp
         })
       })
       this.emit('CLI:group-mem', {
         id: participants.id,
-        pp,
+        profile,
         action: participants.action
       })
     })
