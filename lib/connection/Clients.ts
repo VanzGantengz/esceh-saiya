@@ -11,7 +11,7 @@ import * as fs from 'node:fs'
 export type IGetBuff = {
   result: Buffer | null
   type: string | null,
-  error: Error | undefined | null
+  error: Error | null
 }
 
 export class Clients extends EventEmitter {
@@ -73,20 +73,23 @@ export class Clients extends EventEmitter {
       msg.message.conversation = footer;
       await this.reply(text, msg, dmc)
   }
-  public async getBuffer(url: URL, e?: boolean): Promise<IGetBuff>{
+  public async getBuffer(url: URL): Promise<IGetBuff>{
     Fetcher
       .get(url)
       .setEncoding('buffer')
       .end(function(err, buff){
-        if (err) e = true
-        let type = FileType(buff)
-        if (e) return {
-          type: null,
-          result: null,
-          error: err
-        } else return {
-          type,
-          result: buff
+        if (!err) {
+          return {
+            type: FileType(buff),
+            result: buff,
+            error: null
+          } else {
+            return {
+              type: null,
+              result: null,
+              error: err
+            }
+          }
         }
       })
   }
