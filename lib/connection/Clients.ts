@@ -16,6 +16,7 @@ export type IGetBuff = {
 
 export class Clients extends EventEmitter {
   private messages;
+  public data;
   constructor(public client: WASocket, private message: any){
     super()
     this.data = new Array
