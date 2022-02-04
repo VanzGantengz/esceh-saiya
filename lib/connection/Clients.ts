@@ -1,8 +1,10 @@
-import { WASocket } from '@adiwajshing/baileys'
+import { WASocket, proto } from '@adiwajshing/baileys'
 import { EventEmitter } from 'events'
 import { format } from 'util'
 import { IMessage } from '../types/Message'
 import FileType from 'file-type'
+import fetch from 'node-fetch'
+import Fetcher from '../Fetcher'
 import * as fs from 'node:fs'
 
 export class Clients extends EventEmitter {
@@ -10,9 +12,9 @@ export class Clients extends EventEmitter {
   constructor(public client: WASocket, private message: any){
     super()
     this.messages = message.messages[0]
-    this.loadEvents()
+    this._loadEvents()
   }
-  private loadEvents(){
+  private _loadEvents(){
     this.client.ws.on('CB:call', call => {
       this.emit('WS:call', call)
     })
@@ -34,32 +36,56 @@ export class Clients extends EventEmitter {
           pp: getPp
         })
       })
-      this.emit('CLI:group-participants', {
+      this.emit('CLI:group-mem', {
         id: participants.id,
         pp,
         action: participants.action
       })
     })
   }
-  public async reply(text: string | undefined, type?: string): Promise< void > {
+  public async reply(text: string | undefined | Buffer, opt?: object | undefined | string, dmic?: boolean): Promise<void>{
     let buff = Buffer.isBuffer(text) ? await FileType(text) : text;
     if (buff.mime != undefined){
       await this.client.sendMessage(this.messages.key.remoteJid, {
-        [buff.mime.split('/')[0]]: text,
-        disappearingMessagesInChat: true
+        [buff.mime.split('/')[0]]: buff,
+        disappearingMessagesInChat: dmic
       }, {
-        quoted: this.messages
+        quoted: !opt ? this.messages : opt
       })
     } else {
       await this.client.sendMessage(this.messages.key.remoteJid, {
         text: format(buff)
       }, {
-        quoted: this.messages
+        quoted: !opt ? this.messages : opt
       })
     }
   }
-  
-  public loadError(error: Error | string){
-    this.emit('error', String(error))
+  public async fakeReply(text: string, footer: string, jid?: string, msg?: object, dmc?: boolean): Promise<void>{
+      let msg = this.messages;
+      msg.participant = !jid ? '0@s.whatsapp.net' : jid;
+      msg.message.conversation = footer;
+      await this.reply(text, msg, dmc)
   }
+  public async getBuffer(url): Promise<IGetBuff>{
+    Fetcher
+      .get(url)
+      .setEncoding('buffer')
+      .end(function(err, buff){
+        if (err) this.loadError(err)
+        let type = FileType(res)
+        return {
+          type,
+          result: buff
+        }
+      })
+  }
+    
+  public loadError(error: Error | string){
+    this.emit('Error', String(error))
+  }
+}
+
+export implements IGetBuff {
+  type: string,
+  result: Buffer
 }
