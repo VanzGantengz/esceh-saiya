@@ -16,7 +16,7 @@ import {
 } from '../types/Message'
 import FileType from 'file-type'
 import fetch from 'node-fetch'
-import Fetcher from '../Fetcher'
+import * as Fetcher from '../Fetcher'
 import * as fs from 'node:fs'
 
 export type IGetBuff = {
