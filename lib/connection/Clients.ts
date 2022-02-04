@@ -7,6 +7,11 @@ import fetch from 'node-fetch'
 import Fetcher from '../Fetcher'
 import * as fs from 'node:fs'
 
+export type IGetBuff = {
+  result: Buffer
+  type: string
+}
+
 export class Clients extends EventEmitter {
   private messages;
   constructor(public client: WASocket, private message: any){
@@ -60,7 +65,7 @@ export class Clients extends EventEmitter {
       })
     }
   }
-  public async fakeReply(text: string, footer: string, jid?: string, msg?: object, dmc?: boolean): Promise<void>{
+  public async fakeReply(text: string, footer: string, jid?: string, dmc?: boolean): Promise<void>{
       let msg = this.messages;
       msg.participant = !jid ? '0@s.whatsapp.net' : jid;
       msg.message.conversation = footer;
@@ -71,8 +76,8 @@ export class Clients extends EventEmitter {
       .get(url)
       .setEncoding('buffer')
       .end(function(err, buff){
-        if (err) this.loadError(err)
-        let type = FileType(res)
+        if (err) throw err;
+        let type = FileType(buff)
         return {
           type,
           result: buff
@@ -83,9 +88,4 @@ export class Clients extends EventEmitter {
   public loadError(error: Error | string){
     this.emit('Error', String(error))
   }
-}
-
-export implements IGetBuff {
-  type: string,
-  result: Buffer
 }
