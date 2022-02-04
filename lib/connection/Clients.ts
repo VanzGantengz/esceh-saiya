@@ -76,7 +76,7 @@ export class Clients extends EventEmitter {
       .get(url)
       .setEncoding('buffer')
       .end(function(err, buff){
-        if (err) throw err;
+        if (err) this.loadError(err)
         let type = FileType(buff)
         return {
           type,
