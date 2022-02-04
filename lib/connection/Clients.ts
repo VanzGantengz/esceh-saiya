@@ -39,9 +39,15 @@ export class Clients extends EventEmitter {
     this.client.ev.on('group-participants.update', participants => {
       let profile = new Array
       participants.participants.forEach(async(p) => {
+        let picture = ''
+        try {
+          picture = await this.client.profilePictureUrl(p)
+        } catch(e) {
+          picture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6OKCP6J9kSv2vlCoxRWiJWWze3agzcNnxNA&usqp=CAU'
+        }
         profile.push({
           participants: p,
-          picture: this.client.profilePictureUrl(p).then(res => res).catch(_ => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6OKCP6J9kSv2vlCoxRWiJWWze3agzcNnxNA&usqp=CAU')
+          picture: picture
         })
       })
       this.emit('CLI:group-mem', {
