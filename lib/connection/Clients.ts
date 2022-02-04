@@ -38,24 +38,29 @@ export class Clients extends EventEmitter {
     })
     this.client.ev.on('group-participants.update', participants => {
       let profile = new Array
+      console.log(participants)
       participants.participants.forEach(async(p) => {
         let picture = ''
         try {
-          picture = await this.client.profilePictureUrl(p)
+          picture = await this.client.profilePictureUrl(p, 'image')
         } catch(e) {
           picture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6OKCP6J9kSv2vlCoxRWiJWWze3agzcNnxNA&usqp=CAU'
         }
+        this.data.push({picture})
         profile.push({
           participants: p,
           picture: picture
         })
       })
-      this.emit('CLI:group-mem', {
-        id: participants.id,
-        profile,
-        action: participants.action
-      })
+      if (this.data.length => 1){
+        this.emit('CLI:group-mem', {
+            id: participants.id,
+            profile,
+            action: participants.action
+        })
+      }
     })
+    this.data = new Array
   }
   public async reply(text: string | undefined | Buffer, opt?: object | undefined | string, dmic?: boolean): Promise<void>{
     let buff = Buffer.isBuffer(text) ? await FileType(text) : text;
