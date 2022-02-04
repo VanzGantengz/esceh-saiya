@@ -1,6 +1,7 @@
 import { WASocket, proto } from '@adiwajshing/baileys'
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
 import { format } from 'util'
+import { URL } from 'node:url'
 import { IMessage } from '../types/Message'
 import FileType from 'file-type'
 import fetch from 'node-fetch'
@@ -8,8 +9,9 @@ import Fetcher from '../Fetcher'
 import * as fs from 'node:fs'
 
 export type IGetBuff = {
-  result: Buffer
-  type: string
+  result: Buffer | null
+  type: string | null,
+  error: Error | undefined | null
 }
 
 export class Clients extends EventEmitter {
@@ -71,14 +73,18 @@ export class Clients extends EventEmitter {
       msg.message.conversation = footer;
       await this.reply(text, msg, dmc)
   }
-  public async getBuffer(url): Promise<IGetBuff>{
+  public async getBuffer(url: URL, e?: boolean): Promise<IGetBuff>{
     Fetcher
       .get(url)
       .setEncoding('buffer')
       .end(function(err, buff){
-        if (err) this.loadError(err)
+        if (err) e = true
         let type = FileType(buff)
-        return {
+        if (e) return {
+          type: null,
+          result: null,
+          error: err
+        } else return {
           type,
           result: buff
         }
