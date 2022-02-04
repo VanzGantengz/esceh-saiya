@@ -52,12 +52,20 @@ export default class Handler extends Clients {
         })
       } else if (msg.noPrefix == '>>'){
         if (!msg.isOwner) return;
-        let text = (format(await eval(transpile(q)))).replace(Config.MONGGO_URI, 'uri gw anjg')
-        conn.sendMessage(msg.from, {
-          text
-        }, {
-          quoted: msg
-        })
+        try {
+          let text = (format(await eval(transpile(q)))).replace(Config.MONGGO_URI, 'uri gw anjg')
+          conn.sendMessage(msg.from, {
+            text
+          }, {
+            quoted: msg
+          })
+        } catch(e) {
+          conn.sendMessage(msg.from, {
+            text: e
+          }, {
+            quoted: msg
+          })
+        }
       }
     } catch(e) {
       //this.loadError(e);
