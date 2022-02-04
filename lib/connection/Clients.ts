@@ -73,7 +73,7 @@ export class Clients extends EventEmitter {
       msg.message.conversation = footer;
       await this.reply(text, msg, dmc)
   }
-  public async getBuffer(url: URL): Promise<IGetBuff>{
+  public async getBuffer(url: URL): Promise<any>{
     Fetcher
       .get(url)
       .setEncoding('buffer')
