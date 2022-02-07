@@ -20,7 +20,7 @@ import {
 const {
     state,
     saveState
-} = useSingleFileAuthState('../auth.json')
+} = useSingleFileAuthState('../hisok.json')
 const store = makeInMemoryStore({
     logger: P().child({
         level: 'debug', stream: 'store'
